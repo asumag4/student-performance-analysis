@@ -1,0 +1,480 @@
+---
+title: "Clean_DATA602_Project"
+author: "Arthur Sumague"
+date: "2024-10-11"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+**Primary Source** 
+https://www.kaggle.com/datasets/lainguyn123/student-performance-factors
+
+Libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+library(GGally)
+library(mosaic)
+```
+
+# Import 
+```{r} 
+data = read.csv("C:\\Users\\sumag\\Documents\\MDSA\\DATA 602\\Project\\StudentPerformanceFactors.csv")
+head(data)
+```
+
+```{r}
+str(data)
+length(data$gender)
+```
+
+# Cleaning
+```{r}
+# NOTE: we found uncleaned data from when we were doing EDA analysis. 
+data <- data[data$Teacher_Quality != "", ]
+data <- data[data$Distance_from_Home != "", ]
+data = na.omit(data)
+```
+
+# Question 
+What does Exam Score look like against all other contributing variables? 
+
+# EDA
+
+```{r}
+numeric_data <- data %>% select_if(is.numeric)
+ggpairs(numeric_data)
+```
+
+```{r}
+ggplot(data) +
+  geom_boxplot(aes(y=Exam_Score), fill = 'red')
+```
+
+# Analyzing Categorical Variables towards Exam Score
+
+
+```{r}
+ggplot(data, aes(x=factor(Teacher_Quality, levels=c('Low', 'Medium', 'High')), y=Exam_Score)) +
+geom_boxplot()
+ggplot(data, aes(
+x=factor(Teacher_Quality, levels=c('Low', 'Medium', 'High')),
+y=Exam_Score,
+fill = Teacher_Quality)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Teacher Quality",
+x = "Teacher Quality",
+y = "Exam Score",
+fill = "Teacher Quality"
+)
+```
+
+```{r}
+ggplot(data, aes(x=School_Type, y=Exam_Score, fill = School_Type)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for School Type",
+x = "School Type",
+y = "Exam Score",
+fill = "School Type"
+)
+```
+
+```{r}
+ggplot(data, aes(x=Distance_from_Home, y=Exam_Score, fill = Distance_from_Home)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Distance of School from Home",
+x = "Distance from Home",
+y = "Exam Score",
+fill = "Distnace from Home"
+)
+```
+
+```{r}
+ggplot(data, aes(x=Gender, y=Exam_Score, fill = Gender)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Gender",
+x = "Gender",
+y = "Exam Score",
+fill = "Gender"
+)
+```
+
+```{r}
+ggplot(data, aes(x=Internet_Access, y=Internet_Access, fill = Internet_Access)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Internet Access",
+x = "Internet Access",
+y = "Exam Score",
+fill = "Internet Access"
+)
+```
+
+```{r}
+ggplot(data, aes(x=factor(Parental_Involvement, levels=c('Low', 'Medium', 'High')), y=Exam_Score, fill = factor(Parental_Involvement, levels=c('Low', 'Medium', 'High')))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Parental Involvement",
+x = "Parental Involvement Categories",
+y = "Exam Score",
+fill = "Parental Involvement Categories"
+)
+```
+
+```{r}
+box = ggplot(data, aes(x=Learning_Disabilities, y=Exam_Score, fill=Learning_Disabilities)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for With and Without Learning Disabilities",
+x = "Disability",
+y = "Exam Score",
+fill = "Disability"
+)
+box
+```
+
+```{r}
+ggplot(data, aes(x=factor(Access_to_Resources, levels=c('Low', 'Medium', 'High')), y=Exam_Score, fill = factor(Access_to_Resources, levels=c('Low', 'Medium', 'High')))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Access to Resources",
+x = "Access to Resources",
+y = "Exam Score",
+fill = "Access to Resources"
+)
+```
+
+```{r}
+ggplot(data, aes(x=factor(Motivation_Level, levels=c('Low', 'Medium', 'High')), y=Exam_Score, fill = factor(Motivation_Level, levels=c('Low', 'Medium', 'High')))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Motivation Levels",
+x = "Motivation Level",
+y = "Exam Score",
+fill = "Motivation Level"
+)
+```
+
+```{r}
+ggplot(data, aes(x=factor(Family_Income, levels=c('Low', 'Medium', 'High')), y=Exam_Score, fill = factor(Family_Income, levels=c('Low', 'Medium', 'High')))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Family Income",
+x = "Family Income",
+y = "Exam Score",
+fill = "Family Income"
+)
+```
+
+```{r}
+ggplot(data, aes(x=factor(Peer_Influence, levels=c('Negative', 'Positive')), y=Exam_Score, fill = factor(Peer_Influence, levels=c('Negative', 'Positive')))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Peer Influence",
+x = "Peer Influence",
+y = "Exam Score",
+fill = "Peer Influence"
+)
+```
+```{r}
+unique(data$Parental_Education_Level)
+unique(data$Parental_Education_Level)
+ggplot(data, aes(x=factor(Parental_Education_Level, levels=c('High School', 'College', "Postgraduate")), y=Exam_Score, fill = factor(Parental_Education_Level, levels=c('High School', 'College', "Postgraduate")))) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Parental Education Level",
+x = "Parental Education Level",
+y = "Exam Score",
+fill = "Parental Education Level"
+)
+```
+
+```{r}
+ggplot(data, aes(
+x=factor(Teacher_Quality, levels=c('Low', 'Medium', 'High')),
+y=Exam_Score,
+fill = Teacher_Quality)) +
+geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+labs(
+title = "Violin Plot of Exam Score for Teacher Quality",
+x = "Teacher Quality",
+y = "Exam Score",
+fill = "Teacher Quality"
+)
+```
+```{r}
+ggplot(data, aes(
+  x=Extracurricular_Activities,
+  y=Exam_Score,
+  fill = Extracurricular_Activities)) +
+  geom_boxplot(width = 0.5, fill = "white", color = "black", outlier.shape = NA) +
+  geom_violin(trim = FALSE, draw_quantiles = c(0.25, 0.5, 0.75), alpha = 0.7) +
+  labs(
+  title = "Violin Plot of Exam Score for Involvement in Extracurriclar Activities",
+  x = "Involvement in Extracurriclar Activities",
+  y = "Exam Score",
+  fill = "Involvement in Extracurriclar Activities"
+  )
+```
+
+# Tests
+Most of them have some sort of effect... the most substantial one being Hours Studied and Attendance 
+
+Linear Reg on Exam Score (y), Attendance (x) 
+$$
+H_{0}: \beta_{0} = 0 \\
+H_{A}: \beta_{0} > 0
+$$
+```{r}
+x = lm(Exam_Score~Attendance, data = data)
+summary(x)
+# Plot the linear relationship
+ggplot(data, aes(x=Attendance, y=Exam_Score)) +
+  geom_point(color = 'red') + stat_smooth(method = 'lm',
+                                          formula = y ~ x, geom = 'smooth' ) +
+  labs( 
+    title = "Exam Scores onto Attendance as Linear Regression Test",
+    x = "Attendance (%)",
+    y = "Exam Score (%)")
+# Plot the the descriptors 
+plot(x)
+```
+
+Linear Reg on Exam Score (y), Hours Studied (x)
+```{r}
+x = lm(Exam_Score~Hours_Studied, data = data)
+summary(x)
+# Plot the linear relationship
+ggplot(data, aes(x=Hours_Studied, y=Exam_Score)) +
+  geom_point(color = 'red') + stat_smooth(method = 'lm',
+                                          formula = y ~ x, geom = 'smooth' ) + 
+    labs( 
+    title = "Exam Scores onto Hours Studied as Linear Regression Test",
+    x = "Hours Studied (hr)",
+    y = "Exam Score (%)")
+# Plot the the descriptors 
+plot(x)
+```
+
+They produced a pretty low R^2 value; meanign that these factors don't follow linearly with the trend of Hours_Studied. 
+
+But then we thought: what if we also include the other factors? Can 
+
+Convert those categorical variables into numerical
+```{r}
+data$Access_to_Resources = as.numeric(factor(data$Access_to_Resources, level = c('Low', 'Medium', 'High')))
+data$Motivation_Level = as.numeric(factor(data$Motivation_Level, level = c('Low', 'Medium', 'High')))
+data$Parental_Involvement = as.numeric(factor(data$Parental_Involvement, level = c('Low', 'Medium', 'High')))
+data$Teacher_Quality = as.numeric(factor(data$Teacher_Quality, level = c('Low', 'Medium', 'High')))
+data$Parental_Education_Level = as.numeric(factor(data$Parental_Education_Level, level = c('High School', 'College', 'Postgraduate')))
+data$Internet_Access = as.numeric(factor(data$Internet_Access, level = c('No', 'Yes')))
+data$Family_Income = as.numeric(factor(data$Family_Income, level = c('Low', 'Medium', 'High')))
+data$Extracurricular_Activities = as.numeric(factor(data$Extracurricular_Activities, level = c('No', 'Yes')))
+data$Peer_Influence = as.numeric(factor(data$Peer_Influence, level = c('Negative', 'Neutral', 'Positive')))
+data$Distance_from_Home = as.numeric(factor(data$Distance_from_Home, level = c('Far', 'Moderate', 'Near')))
+str(data)
+```
+
+Let's do the multilinear regression test now: 
+```{r}
+x = lm(Exam_Score~Hours_Studied+
+         Attendance+
+         Access_to_Resources+
+         Motivation_Level+
+         Parental_Involvement+
+         Teacher_Quality+
+         Parental_Education_Level+
+         Previous_Scores+
+         Tutoring_Sessions+
+         Internet_Access+
+         Family_Income+
+         Extracurricular_Activities+
+         Peer_Influence+
+         Distance_from_Home, data = data)
+summary(x)
+plot(x)
+```
+Should we get rid of outliers, but why though? There are students who are outliers, or those who don't follow the linear trend (those who don't spend much time studying but achieve a high score like an average student)
+
+Let's try
+
+```{r} 
+data = read.csv("C:\\Users\\sumag\\Documents\\MDSA\\DATA 602\\Project\\StudentPerformanceFactors.csv")
+head(data)
+```
+
+# Cleaning
+```{r}
+# NOTE: we found uncleaned data from when we were doing EDA analysis. 
+data <- data[data$Teacher_Quality != "", ]
+data <- data[data$Distance_from_Home != "", ]
+data = na.omit(data)
+```
+
+```{r}
+# Step 1: Calculate Q1, Q3, and IQR
+Q1 <- quantile(data$Exam_Score, 0.25)
+Q3 <- quantile(data$Exam_Score, 0.75)
+IQR <- Q3 - Q1
+
+# Step 2: Define lower and upper bounds for outliers
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Step 3: Filter out the outliers
+data_clean <- data[((data$Exam_Score >= lower_bound) & (data$Exam_Score <= upper_bound)),]
+
+# Display the cleaned data
+head(data_clean)
+```
+
+Lots plot the distribution for Exam Score quickly:
+```{r}
+ggplot(data_clean) +
+  geom_boxplot(aes(y=Exam_Score))
+```
+
+Linear Reg on Exam Score (y), Attendance (x) 
+```{r}
+x = lm(Exam_Score~Attendance, data = data_clean)
+summary(x)
+# Plot the linear relationship
+ggplot(data_clean, aes(x=Attendance, y=Exam_Score)) +
+  geom_point(color = 'red') + stat_smooth(method = 'lm',
+                                          formula = y ~ x, geom = 'smooth' )
+# Plot the the descriptors 
+plot(x)
+```
+
+Linear Reg on Exam Score (y), Hours Studied (x)
+```{r}
+x = lm(Exam_Score~Hours_Studied, data = data_clean)
+summary(x)
+# Plot the linear relationship
+ggplot(data_clean, aes(x=Hours_Studied, y=Exam_Score)) +
+  geom_point(color = 'red') + stat_smooth(method = 'lm',
+                                          formula = y ~ x, geom = 'smooth' )
+# Plot the the descriptors 
+plot(x)
+```
+
+
+```{r}
+data_clean$Access_to_Resources = as.numeric(factor(data_clean$Access_to_Resources, level = c('Low', 'Medium', 'High')))
+data_clean$Motivation_Level = as.numeric(factor(data_clean$Motivation_Level, level = c('Low', 'Medium', 'High')))
+data_clean$Parental_Involvement = as.numeric(factor(data_clean$Parental_Involvement, level = c('Low', 'Medium', 'High')))
+data_clean$Teacher_Quality = as.numeric(factor(data_clean$Teacher_Quality, level = c('Low', 'Medium', 'High')))
+data_clean$Parental_Education_Level = as.numeric(factor(data_clean$Parental_Education_Level, level = c('High School', 'College', 'Postgraduate')))
+data_clean$Internet_Access = as.numeric(factor(data_clean$Internet_Access, level = c('No', 'Yes')))
+data_clean$Family_Income = as.numeric(factor(data_clean$Family_Income, level = c('Low', 'Medium', 'High')))
+data_clean$Extracurricular_Activities = as.numeric(factor(data_clean$Extracurricular_Activities, level = c('No', 'Yes')))
+data_clean$Peer_Influence = as.numeric(factor(data_clean$Peer_Influence, level = c('Negative', 'Neutral', 'Positive')))
+data_clean$Distance_from_Home = as.numeric(factor(data_clean$Distance_from_Home, level = c('Far', 'Moderate', 'Near')))
+```
+
+```{r}
+x = lm(Exam_Score~
+         Hours_Studied+
+         Attendance+
+         Access_to_Resources+
+         Parental_Involvement+
+         Previous_Scores,
+        data = data_clean)
+summary(x)
+plot(x)
+```
+We see that this cleaned dataset serves as a much better linear regression model then previously, so we can finally make conclusions about the quantity of influence these factors have on Exam Score. 
+
+But we still see that Hours_Studied and Attendance were the biggest contributors to achieving a high score. 
+
+Other confounding variables not included in the dataset: 
+1. Intelligence Quotient
+2. Emotional Quotient
+3. Attention Spans
+
+## Conclusion: 
+We see that the slopes for Hours Studied, Attendance, Access to Resources, Parental Involvement and Previous Scores (top 5 contributors to Exam Score) have slopes significantly different than 0 when modelled linearly to Exam Score. Therefore, the coefficients provided by this model can be trusted. 
+
+# Other statical tests 
+
+## Disability 
+$$
+H_{0}: \mu_{ \text{Exam Score - Disability} } = \mu_{ \text{Exam Score - No Disability} } \\
+H_{0}: \mu_{ \text{Exam Score - Disability} } > \mu_{ \text{Exam Score - No Disability} }  
+$$
+We also have to check for normality 
+```{r}
+DisabilityExamScore = data$Exam_Score[data$Learning_Disabilities == "Yes"]
+NoDisabilityExamScore = data$Exam_Score[data$Learning_Disabilities == "No"]
+qqnorm(DisabilityExamScore)
+qqnorm(NoDisabilityExamScore)
+```
+We used the cleaned data to model our linear regression, therefore it's justified to use it there. However, we justify the use of the clean model in this analysis, therefore we are using the raw data that does not follow normality assumptions. To continue with this analysis we'll be using bootstrapping.
+
+```{r}
+B = do(1000)*(mean(resample(NoDisabilityExamScore)) - mean(resample(DisabilityExamScore)) )
+
+# Visualize
+ggplot(B, aes(x = result )) +
+geom_histogram(bins = 20, fill = "blue", alpha = 0.7) +
+labs(
+title = "Boostrapping distribution of mean differences for Exam Scores for students without and with Learning Disabilities",
+x = "Mean Difference",
+y = "Frequency"
+) +
+theme_minimal()
+
+ninetyFiveCONF = quantile(B$result, c(0.025, 0.975))
+cat("The 95% Confidence Interval for the Bootstrapped Mean Difference for Exam Score of mean differences for Exam Scores for students without and with Learning Disabilities", ninetyFiveCONF[1], "to", ninetyFiveCONF[2], "/n", "Because this interval does not contain the value 0, we will reject the null hypothesis and determine that the mean differences between these two populations is not equal to 0 and the differences in the population means are statistically signficant")
+```
+## Gender
+$$
+H_{0}: \mu_{ \text{Exam Score - Male} } = \mu_{ \text{Exam Score - Female} } \\
+H_{0}: \mu_{ \text{Exam Score - Male} } \neq \mu_{ \text{Exam Score - Female} }  
+$$
+The data is already determined to be non-normally distributed, so we'll proceed with a bootstrap.
+```{r}
+male = data$Exam_Score[data$Gender == "Male"]
+female = data$Exam_Score[data$Gender == "Female"]
+
+B = do(1000)*(mean(resample(female)) - mean(resample(male)) )
+
+# Visualize
+ggplot(B, aes(x = result )) +
+geom_histogram(bins = 20, fill = "blue", alpha = 0.7) +
+labs(
+title = "Boostrapping distribution of mean differences for Exam Scores Males versus Females",
+x = "Mean Difference",
+y = "Frequency"
+) +
+theme_minimal()
+
+ninetyFiveCONF = quantile(B$result, c(0.025, 0.975))
+cat("The 95% Confidence Interval for the Bootstrapped Mean Difference for Exam Score of mean differences for Exam Scores for students without and with Learning Disabilities", ninetyFiveCONF[1], "to", ninetyFiveCONF[2], "/n", "Because this interval does contain the value 0, we failt to reject the null hypothesis and determine that the mean differences between these two populations is equal to 0 and the differences in the population means are not statistically signficant")
+```
+
+Due to time constraints, we would love to analyze other variables that could potentially affecting each other as well. 
+
+
+
+
+
